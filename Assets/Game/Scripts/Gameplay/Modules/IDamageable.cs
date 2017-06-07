@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CRC
 {
@@ -34,20 +35,37 @@ namespace CRC
         protected float m_CurrentHealth;
         public float CurrentHealth { get { return m_CurrentHealth; } }
 
+        [SerializeField]
+        private Text m_HPText;
+
+        protected virtual void Awake()
+        {
+            m_CurrentHealth = m_MaxHealth;
+
+            m_HPText.text = m_CurrentHealth.ToString();
+        }
+
         public virtual void Hurt(float amount)
         {
             m_CurrentHealth -= amount;
+
             if (m_CurrentHealth <= .0f)
             {
                 m_CurrentHealth = .0f;
                 FireDeathEvent();
             }
+
+            m_HPText.text = m_CurrentHealth.ToString();
         }
 
         public virtual void Heal(float amount)
         {
             m_CurrentHealth += amount;
-            if (m_CurrentHealth > m_MaxHealth) m_CurrentHealth = m_MaxHealth;
+
+            if (m_CurrentHealth > m_MaxHealth)
+                m_CurrentHealth = m_MaxHealth;
+
+            m_HPText.text = m_CurrentHealth.ToString();
         }
 
         protected virtual void FireDeathEvent()
