@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 namespace CRC
 {
@@ -45,6 +46,16 @@ namespace CRC
         [SerializeField]
         private NavMeshAgent m_Agent;
 
+        [Header("Healthbar")]
+
+        [SerializeField]
+        private GameObject m_HealthPanelPrefab;
+
+        [SerializeField]
+        private float m_HPBarYOffPx = 50.0f;
+
+        private Image m_HPBarForeground;
+
         private bool m_Enabled;
 
         private UnitState m_State;
@@ -63,6 +74,20 @@ namespace CRC
             m_State = UnitState.Idle;
             m_CurrentHealth = m_MaxHealth;
 
+            GameObject healthPanel = Instantiate
+            (
+                m_HealthPanelPrefab,
+                Camera.main.WorldToScreenPoint(this.transform.position) + Vector3.up * m_HPBarYOffPx,
+                Quaternion.identity,
+                GameObject.Find("HUD").transform
+            );
+
+            healthPanel.GetComponent<UnitHealthPanel>().Initialize(this, m_HPBarYOffPx);
+
+            m_HPBarForeground = healthPanel.transform.GetChild(1).GetComponent<Image>();
+
+            HealthChangeEvent += OnHealthChange;
+
             m_Enabled = true;
         }
 
@@ -72,6 +97,16 @@ namespace CRC
                 return;
 
             StartCoroutine(Walk());
+        }
+
+        void OnDestroy()
+        {
+            HealthChangeEvent -= OnHealthChange;
+        }
+
+        private void OnHealthChange()
+        {
+            m_HPBarForeground.fillAmount = m_CurrentHealth / m_MaxHealth;
         }
 
         private IEnumerator Walk()
