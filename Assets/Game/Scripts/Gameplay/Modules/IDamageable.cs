@@ -7,9 +7,11 @@ using UnityEngine.UI;
 namespace CRC
 {
     public delegate void DeathEventHandler();
+    public delegate void HealthChangeEventHandler();
     public interface IDamageable
     {
         event DeathEventHandler DeathEvent;
+        event HealthChangeEventHandler HealthChangeEvent;
 
         KingTower Owner { get; }
 
@@ -23,6 +25,7 @@ namespace CRC
     public abstract class Damageable : MonoBehaviour, IDamageable
     {
         public event DeathEventHandler DeathEvent;
+        public event HealthChangeEventHandler HealthChangeEvent;
 
         [SerializeField]
         protected KingTower m_Owner;
@@ -35,16 +38,6 @@ namespace CRC
         protected float m_CurrentHealth;
         public float CurrentHealth { get { return m_CurrentHealth; } }
 
-        [SerializeField]
-        private Text m_HPText;
-
-        protected virtual void Awake()
-        {
-            m_CurrentHealth = m_MaxHealth;
-
-            m_HPText.text = m_CurrentHealth.ToString();
-        }
-
         public virtual void Hurt(float amount)
         {
             m_CurrentHealth -= amount;
@@ -55,7 +48,7 @@ namespace CRC
                 FireDeathEvent();
             }
 
-            m_HPText.text = m_CurrentHealth.ToString();
+            FireHealthChangeEvent();
         }
 
         public virtual void Heal(float amount)
@@ -65,13 +58,19 @@ namespace CRC
             if (m_CurrentHealth > m_MaxHealth)
                 m_CurrentHealth = m_MaxHealth;
 
-            m_HPText.text = m_CurrentHealth.ToString();
+            FireHealthChangeEvent();
         }
 
-        protected virtual void FireDeathEvent()
+        protected void FireDeathEvent()
         {
             if (DeathEvent != null)
                 DeathEvent();
+        }
+
+        protected void FireHealthChangeEvent()
+        {
+            if (HealthChangeEvent != null)
+                HealthChangeEvent();
         }
     }
 }
