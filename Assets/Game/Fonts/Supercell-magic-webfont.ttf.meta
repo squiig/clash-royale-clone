@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: c37631301d0458243b28847c9af49e40
+timeCreated: 1496864542
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Supercell-Magic
+  fontNames:
+  - Supercell-Magic
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
