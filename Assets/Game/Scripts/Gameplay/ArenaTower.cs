@@ -9,8 +9,10 @@ namespace CRC
         [SerializeField]
         private Renderer m_Renderer;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             m_Renderer.material.color = m_Owner.Definition.Color;
         }
     }
