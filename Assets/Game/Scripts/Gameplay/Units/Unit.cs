@@ -60,6 +60,9 @@ namespace CRC
 
         private UnitState m_State;
 
+        [SerializeField]
+        private Transform helper;
+
         void Awake()
         {
             m_State = UnitState.Idle;
@@ -84,7 +87,8 @@ namespace CRC
 
             healthPanel.GetComponent<UnitHealthPanel>().Initialize(this, m_HPBarYOffPx);
 
-            m_HPBarForeground = healthPanel.transform.GetChild(1).GetComponent<Image>();
+            m_HPBarForeground = healthPanel.transform.GetChild(0).GetComponent<Image>();
+            m_HPBarForeground.color = m_Owner.Definition.Color;
 
             HealthChangeEvent += OnHealthChange;
 
@@ -93,6 +97,10 @@ namespace CRC
 
         void Update()
         {
+            if (helper != null)
+            {
+                helper.position = m_Agent.destination;
+            }
             if (!m_Enabled)
                 return;
 
