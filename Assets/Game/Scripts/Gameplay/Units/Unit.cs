@@ -87,7 +87,7 @@ namespace CRC
 
             healthPanel.GetComponent<UnitHealthPanel>().Initialize(this, m_HPBarYOffPx);
 
-            m_HPBarForeground = healthPanel.transform.GetChild(0).GetComponent<Image>();
+            m_HPBarForeground = healthPanel.transform.GetChild(1).GetComponent<Image>();
             m_HPBarForeground.color = m_Owner.Definition.Color;
 
             HealthChangeEvent += OnHealthChange;
