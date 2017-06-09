@@ -6,17 +6,14 @@ using UnityEngine.UI;
 
 namespace CRC
 {
-    public class Tower : Damageable
+    public class Tower : Offensive
     {
         [SerializeField]
         private Text m_HPText;
 
-        [SerializeField]
-        private Collider m_DefenseArea;
-
-        protected virtual void Awake()
+        protected override void Awake()
         {
-            m_DefenseArea = GetComponent<Collider>();
+            base.Awake();
 
             m_CurrentHealth = m_MaxHealth;
             m_HPText.text = m_CurrentHealth.ToString();
