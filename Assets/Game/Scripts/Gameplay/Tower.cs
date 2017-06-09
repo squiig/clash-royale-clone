@@ -11,10 +11,14 @@ namespace CRC
         [SerializeField]
         private Text m_HPText;
 
+        [SerializeField]
+        private Collider m_DefenseArea;
+
         protected virtual void Awake()
         {
-            m_CurrentHealth = m_MaxHealth;
+            m_DefenseArea = GetComponent<Collider>();
 
+            m_CurrentHealth = m_MaxHealth;
             m_HPText.text = m_CurrentHealth.ToString();
         }
 
