@@ -2,13 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CRC
 {
     public delegate void DeathEventHandler();
+    public delegate void HealthChangeEventHandler();
     public interface IDamageable
     {
         event DeathEventHandler DeathEvent;
+        event HealthChangeEventHandler HealthChangeEvent;
 
         KingTower Owner { get; }
 
@@ -22,6 +25,7 @@ namespace CRC
     public abstract class Damageable : MonoBehaviour, IDamageable
     {
         public event DeathEventHandler DeathEvent;
+        public event HealthChangeEventHandler HealthChangeEvent;
 
         [SerializeField]
         protected KingTower m_Owner;
@@ -37,23 +41,36 @@ namespace CRC
         public virtual void Hurt(float amount)
         {
             m_CurrentHealth -= amount;
+
             if (m_CurrentHealth <= .0f)
             {
                 m_CurrentHealth = .0f;
                 FireDeathEvent();
             }
+
+            FireHealthChangeEvent();
         }
 
         public virtual void Heal(float amount)
         {
             m_CurrentHealth += amount;
-            if (m_CurrentHealth > m_MaxHealth) m_CurrentHealth = m_MaxHealth;
+
+            if (m_CurrentHealth > m_MaxHealth)
+                m_CurrentHealth = m_MaxHealth;
+
+            FireHealthChangeEvent();
         }
 
-        protected virtual void FireDeathEvent()
+        protected void FireDeathEvent()
         {
             if (DeathEvent != null)
                 DeathEvent();
+        }
+
+        protected void FireHealthChangeEvent()
+        {
+            if (HealthChangeEvent != null)
+                HealthChangeEvent();
         }
     }
 }

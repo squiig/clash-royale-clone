@@ -29,7 +29,13 @@ namespace CRC
 
                 if (hitSuccess)
                 {
-                    Unit unit = Instantiate(m_UnitPrefab.gameObject, hitInfo.point, Quaternion.identity).GetComponent<Unit>();
+                    Unit unit = Instantiate
+                    (
+                        m_UnitPrefab.gameObject,
+                        hitInfo.point + Vector3.up * m_UnitPrefab.transform.lossyScale.y,
+                        Quaternion.identity
+                    )
+                    .GetComponent<Unit>();
 
                     if (unit == null)
                         return;
