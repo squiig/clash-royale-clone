@@ -60,9 +60,6 @@ namespace CRC
 
         private UnitState m_State;
 
-        [SerializeField]
-        private Transform helper;
-
         void Awake()
         {
             m_State = UnitState.Idle;
@@ -97,10 +94,6 @@ namespace CRC
 
         void Update()
         {
-            if (helper != null)
-            {
-                helper.position = m_Agent.destination;
-            }
             if (!m_Enabled)
                 return;
 
