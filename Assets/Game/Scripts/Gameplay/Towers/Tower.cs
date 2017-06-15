@@ -2,14 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 namespace CRC
 {
     public class Tower : Offensive
     {
         [SerializeField]
-        private Text m_HPText;
+        private TextMeshProUGUI m_HPText;
 
         protected override void Awake()
         {
