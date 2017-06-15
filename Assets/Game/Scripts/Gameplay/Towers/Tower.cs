@@ -2,14 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 namespace CRC
 {
     public class Tower : Damageable
     {
         [SerializeField]
-        private Text m_HPText;
+        private TextMeshProUGUI m_HPText;
 
         protected virtual void Awake()
         {
