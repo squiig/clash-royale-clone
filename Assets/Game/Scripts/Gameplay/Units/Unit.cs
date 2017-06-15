@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace CRC
 {
-    public class Unit : Damageable
+    public class Unit : Offensive
     {
         public enum UnitState
         {
@@ -40,8 +40,10 @@ namespace CRC
 
         private UnitState m_State;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             m_State = UnitState.Idle;
         }
 
