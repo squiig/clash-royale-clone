@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace CRC
 {
-    public class Unit : Damageable
+    public class Unit : Offensive
     {
         public enum UnitState
         {

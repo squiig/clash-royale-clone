@@ -6,7 +6,7 @@ using TMPro;
 
 namespace CRC
 {
-    public class Tower : Damageable
+    public class Tower : Offensive
     {
         [SerializeField]
         private TextMeshProUGUI m_HPText;
@@ -14,7 +14,6 @@ namespace CRC
         protected virtual void Awake()
         {
             m_CurrentHealth = m_MaxHealth;
-
             m_HPText.text = m_CurrentHealth.ToString();
         }
 
