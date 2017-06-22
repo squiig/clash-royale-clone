@@ -15,12 +15,18 @@ namespace CRC
         private float m_MovementSpeed;
         public float MovementSpeed { get { return m_MovementSpeed; } }
 
+        [Header("Offense")]
+
         [SerializeField]
         private float m_Damage;
         public float Damage { get { return m_Damage; } }
 
         [SerializeField]
-        private float m_DamageInterval;
-        public float DamageInterval { get { return m_DamageInterval; } }
+        private float m_AttackDelay;
+        public float AttackDelay { get { return m_AttackDelay; } }
+
+        [SerializeField]
+        private float m_InitialAttackDelay;
+        public float InitialAttackDelay { get { return m_InitialAttackDelay; } }
     }
 }

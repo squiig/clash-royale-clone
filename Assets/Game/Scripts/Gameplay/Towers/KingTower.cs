@@ -11,9 +11,6 @@ namespace CRC
         private KingTowerDefinition m_Definition;
         public KingTowerDefinition Definition { get { return m_Definition; } }
 
-        [SerializeField]
-        private Renderer m_Renderer;
-
         protected override void Awake()
         {
             base.Awake();

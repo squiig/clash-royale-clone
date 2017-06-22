@@ -23,6 +23,8 @@ namespace CRC
         [SerializeField]
         private Renderer m_Renderer;
 
+        [Header("Navigation")]
+
         [SerializeField]
         private NavMeshAgent m_Agent;
 
@@ -40,6 +42,15 @@ namespace CRC
 
         private UnitState m_State;
 
+        private float m_Damage;
+        public override float Damage { get { return m_Damage; } }
+
+        private float m_AttackDelay;
+        public override float AttackDelay { get { return m_AttackDelay; } }
+
+        private float m_InitialAttackDelay;
+        public override float InitialAttackDelay { get { return m_InitialAttackDelay; } }
+
         void Awake()
         {
             m_State = UnitState.Idle;
@@ -49,11 +60,19 @@ namespace CRC
         {
             m_Owner = owner;
 
+            // Assign unit definition variables
+            m_Damage = m_Definition.Damage;
+            m_AttackDelay = m_Definition.AttackDelay;
+            m_InitialAttackDelay = m_Definition.InitialAttackDelay;
+            m_Agent.speed = m_Definition.MovementSpeed;
+
+            // Assign player colour
             m_Renderer.material.color = m_Owner.Definition.Color;
 
-            m_State = UnitState.Idle;
+            // Reset health
             m_CurrentHealth = m_MaxHealth;
 
+            // Instantiate health panel
             GameObject healthPanel = Instantiate
             (
                 m_HealthPanelPrefab,
@@ -80,7 +99,7 @@ namespace CRC
             StartCoroutine(Walk());
         }
 
-        void OnDestroy()
+        protected override void OnDestroy()
         {
             HealthChangeEvent -= OnHealthChange;
         }
@@ -100,15 +119,15 @@ namespace CRC
             Damageable[] damageables = FindObjectsOfType<Damageable>();
             for (int i = 0; i < damageables.Length; i++)
             {
-                Damageable d = damageables[i];
+                Damageable target = damageables[i];
 
-                if (d.Owner != m_Owner)
+                if (target.Owner != m_Owner)
                 {
-                    float dist = Vector3.Distance(this.transform.position, d.transform.position);
+                    float dist = Vector3.Distance(this.transform.position, target.transform.position);
 
                     if (dist < range)
                     {
-                        nearest = d;
+                        nearest = target;
                         range = dist;
                     }
                 }

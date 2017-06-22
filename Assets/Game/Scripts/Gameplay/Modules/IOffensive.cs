@@ -11,44 +11,76 @@ namespace CRC
 
         float Damage { get; }
         float AttackDelay { get; }
-        float AttackDelayInitial { get; }
+        float InitialAttackDelay { get; }
 
-        Collider DefenseArea { get; }
+        ColliderEventGroup DefenseArea { get; }
     }
 
     public abstract class Offensive : Damageable, IOffensive
     {
-        [SerializeField]
-        private float m_Damage;
-        public float Damage { get { return m_Damage; } }
+        public abstract float Damage { get; }
+        public abstract float AttackDelay { get; }
+        public abstract float InitialAttackDelay { get; }
 
         [SerializeField]
-        private float m_AttackDelay;
-        public float AttackDelay { get { return m_AttackDelay; } }
+        protected ColliderEventGroup m_DefenseArea;
+        public ColliderEventGroup DefenseArea { get { return m_DefenseArea; } }
 
-        [SerializeField]
-        private float m_AttackDelayInitial;
-        public float AttackDelayInitial { get { return m_AttackDelayInitial; } }
+        protected bool m_IsAttacking;
+        public bool IsAttacking { get { return m_IsAttacking; } }
 
-        [SerializeField]
-        private Collider m_DefenseArea;
-        public Collider DefenseArea { get { return m_DefenseArea; } }
+        protected virtual void Start()
+        {
+            m_DefenseArea.TriggerEnterEvent += OnTriggerEnter;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            m_DefenseArea.TriggerEnterEvent -= OnTriggerEnter;
+        }
 
         protected virtual void Attack(Damageable target)
         {
+            m_IsAttacking = true;
+
             StartCoroutine(AttackRoutine(target));
         }
 
         protected virtual IEnumerator AttackRoutine(Damageable target)
         {
-            yield return new WaitForSeconds(m_AttackDelayInitial);
+            yield return new WaitForSeconds(InitialAttackDelay);
 
             for (;;)
             {
-                target.Hurt(m_Damage);
+                target.Hurt(Damage);
 
-                yield return new WaitForSeconds(m_AttackDelay);
+                Debug.Log(this.gameObject.name + " attacked " + target.name + " by " + Damage + "!");
+
+                yield return new WaitForSeconds(AttackDelay);
             }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (m_IsAttacking)
+                return;
+
+            Damageable target = other.GetComponent<Damageable>();
+
+            if (target == null)
+                return;
+
+            if (target.Owner == m_Owner)
+                return;
+
+            Attack(target);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            m_IsAttacking = false;
+
+            StopAllCoroutines();
         }
     }
 }

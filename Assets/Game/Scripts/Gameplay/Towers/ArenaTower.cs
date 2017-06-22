@@ -6,9 +6,6 @@ namespace CRC
 {
     public class ArenaTower : Tower
     {
-        [SerializeField]
-        private Renderer m_Renderer;
-
         protected override void Awake()
         {
             base.Awake();
