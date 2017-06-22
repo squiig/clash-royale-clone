@@ -34,9 +34,21 @@ namespace CRC
         private Collider m_DefenseArea;
         public Collider DefenseArea { get { return m_DefenseArea; } }
 
-        protected virtual void Awake()
+        protected virtual void Attack(Damageable target)
         {
-            m_DefenseArea = GetComponent<Collider>();
+            StartCoroutine(AttackRoutine(target));
+        }
+
+        protected virtual IEnumerator AttackRoutine(Damageable target)
+        {
+            yield return new WaitForSeconds(m_AttackDelayInitial);
+
+            for (;;)
+            {
+                target.Hurt(m_Damage);
+
+                yield return new WaitForSeconds(m_AttackDelay);
+            }
         }
     }
 }

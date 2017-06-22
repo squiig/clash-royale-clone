@@ -40,10 +40,8 @@ namespace CRC
 
         private UnitState m_State;
 
-        protected override void Awake()
+        void Awake()
         {
-            base.Awake();
-
             m_State = UnitState.Idle;
         }
 

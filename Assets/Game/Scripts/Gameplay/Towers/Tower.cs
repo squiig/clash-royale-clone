@@ -11,10 +11,8 @@ namespace CRC
         [SerializeField]
         private TextMeshProUGUI m_HPText;
 
-        protected override void Awake()
+        protected virtual void Awake()
         {
-            base.Awake();
-
             m_CurrentHealth = m_MaxHealth;
             m_HPText.text = m_CurrentHealth.ToString();
         }
