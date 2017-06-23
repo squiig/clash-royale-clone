@@ -33,6 +33,9 @@ namespace CRC
         [SerializeField]
         private GameObject m_HealthPanelPrefab;
 
+        private GameObject m_HealthPanel;
+        public GameObject HealthPanel { get { return m_HealthPanel; } }
+
         [SerializeField]
         private float m_HPBarYOffPx = 50.0f;
 
@@ -73,7 +76,7 @@ namespace CRC
             m_CurrentHealth = m_MaxHealth;
 
             // Instantiate health panel
-            GameObject healthPanel = Instantiate
+            m_HealthPanel = Instantiate
             (
                 m_HealthPanelPrefab,
                 Camera.main.WorldToScreenPoint(this.transform.position) + Vector3.up * m_HPBarYOffPx,
@@ -81,9 +84,9 @@ namespace CRC
                 GameObject.Find("HUD").transform
             );
 
-            healthPanel.GetComponent<UnitHealthPanel>().Initialize(this, m_HPBarYOffPx);
+            m_HealthPanel.GetComponent<UnitHealthPanel>().Initialize(this, m_HPBarYOffPx);
 
-            m_HPBarForeground = healthPanel.transform.GetChild(1).GetComponent<Image>();
+            m_HPBarForeground = m_HealthPanel.transform.GetChild(1).GetComponent<Image>();
             m_HPBarForeground.color = m_Owner.Definition.Color;
 
             HealthChangeEvent += OnHealthChange;
@@ -107,6 +110,13 @@ namespace CRC
         private void OnHealthChange()
         {
             m_HPBarForeground.fillAmount = m_CurrentHealth / m_MaxHealth;
+        }
+
+        protected override void OnDeath()
+        {
+            Destroy(m_HealthPanel);
+
+            base.OnDeath();
         }
 
         private IEnumerator Walk()
@@ -133,11 +143,14 @@ namespace CRC
                 }
             }
 
-            if (nearest != null)
-            {
-                m_Agent.SetDestination(nearest.transform.position);
-                m_State = UnitState.Moving;
-            }
+            if (nearest == null)
+                yield return null;
+
+            if (!m_Agent.isOnNavMesh)
+                yield return null;
+
+            m_Agent.SetDestination(nearest.transform.position);
+            m_State = UnitState.Moving;
         }
     }
 }

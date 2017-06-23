@@ -38,13 +38,30 @@ namespace CRC
         protected float m_CurrentHealth;
         public float CurrentHealth { get { return m_CurrentHealth; } }
 
+        protected bool m_IsDead;
+        public bool IsDead { get { return m_IsDead; } }
+
+        protected virtual void Start()
+        {
+            DeathEvent += OnDeath;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            DeathEvent -= OnDeath;
+        }
+
         public virtual void Hurt(float amount)
         {
+            if (m_IsDead)
+                return;
+
             m_CurrentHealth -= amount;
 
             if (m_CurrentHealth <= .0f)
             {
                 m_CurrentHealth = .0f;
+                m_IsDead = true;
                 FireDeathEvent();
             }
 
@@ -59,6 +76,11 @@ namespace CRC
                 m_CurrentHealth = m_MaxHealth;
 
             FireHealthChangeEvent();
+        }
+
+        protected virtual void OnDeath()
+        {
+            Destroy(this.gameObject);
         }
 
         protected void FireDeathEvent()

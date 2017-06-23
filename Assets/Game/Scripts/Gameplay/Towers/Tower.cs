@@ -49,5 +49,12 @@ namespace CRC
         {
             m_HPText.text = m_CurrentHealth.ToString();
         }
+
+        protected override void OnDeath()
+        {
+            Destroy(m_HPText.transform.parent.gameObject);
+
+            base.OnDeath();
+        }
     }
 }
